@@ -18,7 +18,7 @@ REWRITE_PROMPT = ChatPromptTemplate.from_messages([
 ANSWER_PROMPT = ChatPromptTemplate.from_messages([
     (
         "system",
-        "너는 문서 기반 한국어 튜터다. 반드시 제공된 문서(context)에 있는 내용만 사용해서 답변해라. "
+        "너는 문서 기반 한국어 튜터다. 반드시 제공된 문서(context)에 있는 내용만 사용해서 존댓말로 답변해라. "
         "출력 형식은 반드시 다음 규칙을 지켜라. "
         "1) 줄바꿈(\\n), 목록, 마크다운, 제목, 기호(-, *, #)를 절대 사용하지 마라. "
         "2) 한 문단, 한 줄의 자연스러운 설명문으로만 작성하라. "
@@ -62,7 +62,12 @@ def chat_answer(study_session_id: str, question: str, top_k: int = 4) -> Dict[st
 
     # 2) 검색
     vs = get_vectorstore()
-    retriever = vs.as_retriever(search_kwargs={"k": top_k})
+    retriever = vs.as_retriever(
+        search_kwargs={
+            "k": top_k,
+            "filter": {"study_session_id": sid},
+        }
+    )
     docs = retriever.invoke(search_query)
 
     context = _format_context(docs)

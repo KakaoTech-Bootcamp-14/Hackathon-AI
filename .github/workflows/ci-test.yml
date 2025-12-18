@@ -1,4 +1,4 @@
-name: KTB 해커톤 14조 PR CI 파이프라인
+name: KTB 해커톤 ZEUSAI PR CI 파이프라인
 
 on:
   pull_request:

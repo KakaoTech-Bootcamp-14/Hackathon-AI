@@ -1,4 +1,4 @@
-name: KTB 해커톤 14조 CICD 파이프라인
+name: KTB 해커톤 ZEUSAI CICD 파이프라인
 
 on:
   push:
@@ -106,7 +106,7 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_AI_URL }}
-          title: "${{ needs.deploy.result == 'success' && '✅' || '❌' }} develop 브랜치 배포 결과"
+          title: "${{ needs.deploy.result == 'success' && '✅' || '❌' }} 인공지능 develop 브랜치 배포 결과"
           description: |
             **커밋 메시지**: ${{ github.event.head_commit.message }}
             **작성자**: ${{ github.event.pusher.name }}

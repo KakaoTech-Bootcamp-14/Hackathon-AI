@@ -1,21 +1,24 @@
 from fastapi import APIRouter, HTTPException
 from app.schema.study import (
-    CreatePlanReq, ReplanReq, PlanResp,
+    CreatePlanReq, ReplanReq,
     MaterialReq, MaterialResp
 )
 from app.service.plan_service import create_plan, replan
 from app.service.material_service import create_material
 
+from typing import List
+from app.schema.study import ChapterItem
+
 router = APIRouter(prefix="/study", tags=["study"])
 
-@router.post("/plan", response_model=PlanResp)
+@router.post("/plan", response_model=List[ChapterItem])
 def plan(req: CreatePlanReq):
     try:
         return create_plan(req.study_session_id, req.total_days, req.hours_per_day)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.post("/replan", response_model=PlanResp)
+@router.post("/replan", response_model=List[ChapterItem])
 def replan_api(req: ReplanReq):
     try:
         return replan(

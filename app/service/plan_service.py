@@ -3,6 +3,7 @@ from typing import Dict, Any, List, Optional
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
+import re
 from app.core.llm import get_llm
 from app.core.vectorstore import get_vectorstore
 
@@ -66,6 +67,34 @@ REPLAN_PROMPT = ChatPromptTemplate.from_messages([
 ])
 
 
+
+def parse_plan_text(plan_text: str) -> List[Dict]:
+    lines = [l.strip() for l in plan_text.splitlines() if l.strip()]
+    chapters = []
+
+    for idx, line in enumerate(lines, start=1):
+        # 예: 1일차, 데이터 모델링의 이해, [데이터 모델의 이해, 엔터티, 속성]
+        m = re.match(r"\d+일차,\s*(.*?),\s*\[(.*)\]", line)
+        if not m:
+            continue
+
+        chapter_title = m.group(1).strip()
+        tasks_raw = m.group(2)
+        tasks = [t.strip() for t in tasks_raw.split(",") if t.strip()]
+
+        chapters.append({
+            "chapterOrder": idx,
+            "chapterTitle": chapter_title,
+            "tasks": [
+                {"taskOrder": i + 1, "taskTitle": task}
+                for i, task in enumerate(tasks)
+            ]
+        })
+
+    return chapters
+
+
+
 def _retrieve_overview_context(study_session_id: str, k: int = 18) -> str:
     """계획 생성을 위해 넓게(overview) 문서를 가져옴"""
     vs = get_vectorstore()
@@ -91,7 +120,7 @@ def create_plan(study_session_id: str, total_days: int, hours_per_day: float) ->
     llm = get_llm(temperature=0.2)
     chain = PLAN_PROMPT | llm | StrOutputParser()
     out = chain.invoke({"total_days": total_days, "hours_per_day": hours_per_day, "context": context})
-    return {"study_session_id": study_session_id, "plan_json": out}
+    return parse_plan_text(out)
 
 def replan(
     study_session_id: str,
@@ -110,4 +139,4 @@ def replan(
         "pending_topics": pending_topics,
         "context": context
     })
-    return {"study_session_id": study_session_id, "plan_json": out}
+    return parse_plan_text(out)

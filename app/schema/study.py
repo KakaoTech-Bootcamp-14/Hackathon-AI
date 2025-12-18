@@ -13,9 +13,14 @@ class ReplanReq(BaseModel):
     studied_topics: List[str] = []
     pending_topics: List[str] = []
 
-class PlanResp(BaseModel):
-    study_session_id: str
-    plan_json: str
+class TaskItem(BaseModel):
+    taskOrder: int
+    taskTitle: str
+
+class ChapterItem(BaseModel):
+    chapterOrder: int
+    chapterTitle: str
+    tasks: List[TaskItem]
 
 class MaterialReq(BaseModel):
     study_session_id: Optional[str] = "demo11"

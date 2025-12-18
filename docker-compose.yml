@@ -1,0 +1,10 @@
+services:
+
+  fastapi:
+    image: wpgur07/ai:latest
+    container_name: zeusAI-app
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+    restart: always

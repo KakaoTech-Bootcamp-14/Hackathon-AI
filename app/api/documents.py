@@ -15,17 +15,20 @@ async def upload_document(
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="only .pdf is supported")
-    
+
     sid = (study_session_id or "").strip() or "demo11"
-
     save_path = os.path.join(UPLOAD_DIR, file.filename)
-    with open(save_path, "wb") as f:
-        f.write(await file.read())
 
-    result = ingest_pdf(
-        study_session_id=sid,
-        file_path=save_path,
-        original_filename=file.filename,
-    )
+    try:
+        with open(save_path, "wb") as f:
+            f.write(await file.read())
 
-    return result
+        result = ingest_pdf(
+            study_session_id=sid,
+            file_path=save_path,
+            original_filename=file.filename,
+        )
+        return result
+    finally:
+        if os.path.exists(save_path):
+            os.remove(save_path)

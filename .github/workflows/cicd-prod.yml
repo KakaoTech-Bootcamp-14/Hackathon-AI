@@ -51,8 +51,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/ktb-ai:latest
-            ${{ secrets.DOCKER_USERNAME }}/ktb-ai:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/zeus-ai:latest
+            ${{ secrets.DOCKER_USERNAME }}/zeus-ai:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-22.04

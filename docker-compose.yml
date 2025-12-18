@@ -1,7 +1,7 @@
 services:
 
   fastapi:
-    image: wpgur07/ai:latest
+    image: wpgur07/zeus-ai:latest
     container_name: zeusAI-app
     ports:
       - '8000:8000'

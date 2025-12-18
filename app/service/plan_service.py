@@ -125,7 +125,7 @@ def create_plan(study_session_id: str, total_days: int, hours_per_day: float) ->
 def replan(
     study_session_id: str,
     remaining_days: int,
-    hours_per_day: float,
+    hours_per_day: int,
     studied_topics: List[str],
     pending_topics: List[str],
 ) -> Dict[str, Any]:

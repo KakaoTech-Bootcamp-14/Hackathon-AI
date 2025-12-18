@@ -9,7 +9,7 @@ class CreatePlanReq(BaseModel):
 class ReplanReq(BaseModel):
     study_session_id: Optional[str] = "demo11"
     remaining_days: int = Field(..., ge=1, le=365)
-    hours_per_day: float = Field(..., gt=0, le=24)
+    hours_per_day: int = Field(..., gt=0, le=24)
     studied_topics: List[str] = []
     pending_topics: List[str] = []
 
